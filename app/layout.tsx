@@ -3,6 +3,7 @@ import "./globals.css";
 import "./nubian.css";
 import "./loan-calculator.css";
 import "./nubian-brand.css";
+import "./loan-application.css";
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
 
