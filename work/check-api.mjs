@@ -1,0 +1,6 @@
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+const photo=await readFile('public/images/tailor.webp');
+function form(kind='personal',amount='250000',id=crypto.randomUUID(),bad=false){const f=new FormData();for(const [k,v] of Object.entries({kind,name:'Local Test Applicant',phone:'+265 000 000 000',amount,business:kind==='business'?'Local Test Shop':'',requestId:id,consent:'yes'}))f.set(k,v);for(const key of ['photo','collateral'])f.set(key,new File([bad?'not an image':photo],'test.webp',{type:'image/webp'}));return f;}
+async function send(f){const r=await fetch('http://localhost:5173/api/applications',{method:'POST',headers:{Origin:'http://localhost:5173'},body:f});return [r.status,await r.json()];}
+const id=crypto.randomUUID();const a=await send(form('personal','250000',id));assert.equal(a[0],201,JSON.stringify(a));const b=await send(form('personal','250000',id));assert.equal(a[1].reference,b[1].reference);assert.equal((await send(form('business')))[0],201);assert.equal((await send(form('personal','-1')))[0],400);assert.equal((await send(form('personal','250000',crypto.randomUUID(),true)))[0],400);console.log('Local API checks passed: personal, business, duplicate retry, invalid amount, invalid image.');
