@@ -19,11 +19,23 @@ const companyName = "Your Microfinance Company";
 const contactNumbers = ["0999xxxxxxxx", "088xxxxxxx"];
 const demoNotice =
   "This is a demo form and does not send requests. Add a working WhatsApp number before publishing.";
+const minimumLoanAmount = 100000;
+const maximumLoanAmount = 5000000;
+const loanTerms = [1, 2, 3, 4] as const;
+type LoanTerm = (typeof loanTerms)[number];
+const interestRates: Record<LoanTerm, number> = {
+  1: 10,
+  2: 20,
+  3: 30,
+  4: 40,
+};
 const money = (value: number) => `MWK ${value.toLocaleString("en-MW")}`;
 
 export default function Home() {
   const [amount, setAmount] = useState(1000000);
-  const [term, setTerm] = useState<2 | 4>(2);
+  const [customAmount, setCustomAmount] = useState("");
+  const [amountError, setAmountError] = useState("");
+  const [term, setTerm] = useState<LoanTerm>(3);
   const [appointment, setAppointment] = useState({
     name: "",
     phone: "",
@@ -40,6 +52,9 @@ export default function Home() {
   });
   const [appointmentSent, setAppointmentSent] = useState(false);
   const [applicationSent, setApplicationSent] = useState(false);
+  const interestRate = interestRates[term];
+  const interest = Math.round((amount * interestRate) / 100);
+  const totalRepayment = amount + interest;
 
   function bookAppointment(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -49,6 +64,23 @@ export default function Home() {
   function submitApplication(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setApplicationSent(true);
+  }
+
+  function applyCustomAmount() {
+    const parsedAmount = Number(customAmount);
+    if (
+      !Number.isInteger(parsedAmount) ||
+      parsedAmount < minimumLoanAmount ||
+      parsedAmount > maximumLoanAmount
+    ) {
+      setAmountError(
+        `Enter a whole amount from ${money(minimumLoanAmount)} to ${money(maximumLoanAmount)}.`,
+      );
+      return;
+    }
+
+    setAmount(parsedAmount);
+    setAmountError("");
   }
 
   return (
@@ -114,7 +146,7 @@ export default function Home() {
 
       <div className="nubian-strip">
         <span>
-          <CheckCircle2 /> Loans from <strong>MWK 1,000,000</strong>
+          <CheckCircle2 /> Loans from <strong>{money(minimumLoanAmount)}</strong>
         </span>
         <span>
           <CalendarDays /> Appointment-based support
@@ -156,7 +188,7 @@ export default function Home() {
               <span>
                 <Store size={13} /> Business loan
               </span>
-              <span>From MWK 1,000,000</span>
+              <span>From {money(minimumLoanAmount)}</span>
             </div>
             <a className="nubian-button" href="#apply">
               Apply for a loan <ArrowRight size={18} />
@@ -184,7 +216,7 @@ export default function Home() {
           </p>
           <ul>
             <li>
-              <CheckCircle2 /> Start from <strong>MWK 1,000,000</strong>
+              <CheckCircle2 /> Start from <strong>{money(minimumLoanAmount)}</strong>
             </li>
             <li>
               <CheckCircle2 /> Meet with our team before you apply
@@ -205,59 +237,195 @@ export default function Home() {
       </section>
 
       <section className="nubian-calculator" id="calculator">
-        <div>
+        <div className="nubian-calculator-heading">
           <p className="nubian-kicker">
             <span /> PLAN WITH CONFIDENCE
           </p>
-          <h2>Plan your repayment.</h2>
+          <h2>Loan repayment calculator</h2>
           <p>
-            Loans start from MWK 1,000,000. Choose a term to see your estimated
-            total repayment.
+            Adjust the amount and loan term to see your estimated repayment.
           </p>
         </div>
-        <div className="nubian-calculator-card">
-          <label htmlFor="loan-amount">Loan amount (MWK)</label>
-          <input
-            id="loan-amount"
-            type="range"
-            min="1000000"
-            max="10000000"
-            step="100000"
-            value={amount}
-            onChange={(event) => setAmount(Number(event.target.value))}
-          />
-          <output>{money(amount)}</output>
-          <div className="nubian-term-options">
-            <button
-              type="button"
-              className={term === 2 ? "active" : ""}
-              onClick={() => setTerm(2)}
+        <div className="nubian-calculator-controls">
+          <div className="nubian-calculator-field">
+            <label htmlFor="loan-amount-range">Loan Amount (MWK)</label>
+            <div
+              className="nubian-amount-presets"
+              aria-label="Popular loan amounts"
             >
-              2 weeks <strong>30%</strong>
-            </button>
-            <button
-              type="button"
-              className={term === 4 ? "active" : ""}
-              onClick={() => setTerm(4)}
-            >
-              4 weeks <strong>40%</strong>
-            </button>
+              {[100000, 500000, 1000000, 2000000, 5000000].map((preset) => (
+                <button
+                  type="button"
+                  key={preset}
+                  className={amount === preset ? "active" : ""}
+                  aria-pressed={amount === preset}
+                  onClick={() => {
+                    setAmount(preset);
+                    setAmountError("");
+                  }}
+                >
+                  {preset >= 1000000
+                    ? `${preset / 1000000}M`
+                    : `${preset / 1000}K`}
+                </button>
+              ))}
+            </div>
+            <div className="nubian-custom-amount">
+              <input
+                type="number"
+                min={minimumLoanAmount}
+                max={maximumLoanAmount}
+                step="1000"
+                value={customAmount}
+                onChange={(event) => setCustomAmount(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") {
+                    event.preventDefault();
+                    applyCustomAmount();
+                  }
+                }}
+                aria-label="Enter a custom loan amount in Malawi Kwacha"
+                aria-describedby={amountError ? "loan-amount-error" : undefined}
+                placeholder="Or enter custom amount"
+              />
+              <button
+                type="button"
+                className="nubian-calc-set"
+                onClick={applyCustomAmount}
+              >
+                Set
+              </button>
+            </div>
+            {amountError && (
+              <p
+                className="nubian-calculator-error"
+                id="loan-amount-error"
+                role="alert"
+              >
+                {amountError}
+              </p>
+            )}
+            <input
+              id="loan-amount-range"
+              className="nubian-calculator-range"
+              type="range"
+              min={minimumLoanAmount}
+              max={maximumLoanAmount}
+              step="1000"
+              value={amount}
+              onChange={(event) => {
+                setAmount(Number(event.target.value));
+                setAmountError("");
+              }}
+              aria-label="Adjust loan amount"
+            />
+            <div className="nubian-range-labels">
+              <span>{money(minimumLoanAmount)}</span>
+              <output htmlFor="loan-amount-range">{money(amount)}</output>
+              <span>{money(maximumLoanAmount)}</span>
+            </div>
           </div>
-          <div className="nubian-repayment">
-            <span>Estimated total repayment</span>
-            <strong>
-              {money(Math.round(amount * (term === 2 ? 1.3 : 1.4)))}
+          <div className="nubian-calculator-field nubian-term-field">
+            <label htmlFor="loan-term">Loan Term</label>
+            <div className="nubian-term-options" aria-label="Select loan term">
+              {loanTerms.map((weeks) => (
+                <button
+                  type="button"
+                  key={weeks}
+                  className={term === weeks ? "active" : ""}
+                  aria-pressed={term === weeks}
+                  onClick={() => setTerm(weeks)}
+                >
+                  <span>
+                    {weeks} {weeks === 1 ? "Week" : "Weeks"}
+                  </span>
+                  <strong>{interestRates[weeks]}%</strong>
+                </button>
+              ))}
+            </div>
+            <input
+              id="loan-term"
+              className="nubian-calculator-range"
+              type="range"
+              min="1"
+              max="4"
+              step="1"
+              value={term}
+              onChange={(event) => {
+                const selectedTerm = loanTerms.find(
+                  (weeks) => weeks === Number(event.target.value),
+                );
+                if (selectedTerm) setTerm(selectedTerm);
+              }}
+              aria-label="Adjust loan term in weeks"
+            />
+            <div className="nubian-range-labels nubian-term-range-labels">
+              <span>1 Week</span>
+              <output>
+                {term} {term === 1 ? "Week" : "Weeks"} — {interestRate}%
+              </output>
+              <span>4 Weeks</span>
+            </div>
+          </div>
+          <div className="nubian-calculator-field nubian-rate-field">
+            <label htmlFor="interest-rate">Interest Rate</label>
+            <output id="interest-rate">{interestRate}%</output>
+          </div>
+        </div>
+        <aside className="nubian-calculator-summary" aria-live="polite">
+          <div>
+            <span className="nubian-summary-label">Total Repayment</span>
+            <strong className="nubian-summary-total">
+              {money(totalRepayment)}
             </strong>
-            <small>
-              Interest: {money(Math.round(amount * (term === 2 ? 0.3 : 0.4)))} ·{" "}
-              {term} weeks
-            </small>
           </div>
-          <p className="nubian-disclaimer">
-            Illustrative only. Confirm actual rates, fees and terms before
-            publishing.
+          <dl className="nubian-summary-details">
+            <div>
+              <dt>Principal</dt>
+              <dd>{money(amount)}</dd>
+            </div>
+            <div>
+              <dt>Interest ({interestRate}%)</dt>
+              <dd>{money(interest)}</dd>
+            </div>
+            <div>
+              <dt>Duration</dt>
+              <dd>
+                {term} {term === 1 ? "Week" : "Weeks"}
+              </dd>
+            </div>
+          </dl>
+          <a
+            className="nubian-summary-apply"
+            href="#apply"
+            onClick={() =>
+              setApplication({
+                ...application,
+                type: "personal",
+                amount: String(amount),
+              })
+            }
+          >
+            <UserRound size={16} /> Apply Personal
+          </a>
+          <a
+            className="nubian-summary-apply secondary"
+            href="#apply"
+            onClick={() =>
+              setApplication({
+                ...application,
+                type: "business",
+                amount: String(amount),
+              })
+            }
+          >
+            <Store size={16} /> Apply Business
+          </a>
+          <p className="nubian-calculator-disclaimer">
+            Estimates use a flat interest rate for the selected term. Confirm
+            all fees and final terms before applying.
           </p>
-        </div>
+        </aside>
       </section>
 
       <section className="nubian-application" id="apply">
@@ -329,7 +497,7 @@ export default function Home() {
               <input
                 required
                 type="number"
-                min="1000000"
+                min={minimumLoanAmount}
                 step="1000"
                 value={application.amount}
                 onChange={(event) =>

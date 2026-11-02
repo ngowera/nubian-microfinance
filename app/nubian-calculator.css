@@ -1,0 +1,368 @@
+.nubian-calculator {
+  max-width: 1176px;
+  margin: 0 auto 92px;
+  padding: 38px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(320px, 0.95fr);
+  gap: 26px;
+  align-items: stretch;
+  border-radius: 20px;
+  background: #f7f4eb;
+  color: #204236;
+}
+
+.nubian-calculator-heading {
+  grid-column: 1 / -1;
+  text-align: center;
+}
+
+.nubian-calculator-heading .nubian-kicker {
+  justify-content: center;
+}
+
+.nubian-calculator-heading h2 {
+  margin: 12px 0;
+  font-size: clamp(32px, 4vw, 46px);
+  letter-spacing: -1.5px;
+  line-height: 1.1;
+}
+
+.nubian-calculator-heading > p:last-child {
+  margin-bottom: 0;
+  color: #62776d;
+}
+
+.nubian-calculator-controls,
+.nubian-calculator-summary {
+  min-width: 0;
+  padding: 28px;
+  border-radius: 18px;
+}
+
+.nubian-calculator-controls {
+  display: grid;
+  align-content: start;
+  gap: 28px;
+  border: 1px solid #e1e4dc;
+  background: #fff;
+  box-shadow: 0 12px 35px #173a2b0d;
+}
+
+.nubian-calculator-field > label {
+  display: block;
+  margin-bottom: 10px;
+  color: #315044;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.nubian-amount-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.nubian-amount-presets button,
+.nubian-term-options button {
+  border: 1px solid #deded4;
+  background: #f5f1e7;
+  color: #596c63;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.nubian-amount-presets button {
+  min-width: 56px;
+  padding: 9px 13px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.nubian-amount-presets button:hover,
+.nubian-term-options button:hover {
+  border-color: #214f40;
+}
+
+.nubian-amount-presets button.active,
+.nubian-term-options button.active {
+  border-color: #214f40;
+  background: #214f40;
+  color: #fff;
+}
+
+.nubian-custom-amount {
+  display: flex;
+  gap: 10px;
+}
+
+.nubian-custom-amount input {
+  min-width: 0;
+  min-height: 46px;
+  flex: 1;
+  padding: 10px 13px;
+  border: 1px solid #d5ddd8;
+  border-radius: 10px;
+  background: #fff;
+  color: #204236;
+  font: inherit;
+  font-size: 13px;
+}
+
+.nubian-custom-amount input:focus {
+  outline: 3px solid #d8a07f80;
+  border-color: #c96a3d;
+}
+
+.nubian-calc-set {
+  min-width: 58px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 999px;
+  background: #c96a3d;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.nubian-calc-set:hover,
+.nubian-summary-apply:hover {
+  background: #ad542d;
+}
+
+.nubian-calculator-error {
+  margin: 8px 0 0;
+  color: #a52c22;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.nubian-calculator-range {
+  display: block;
+  width: 100%;
+  height: 24px;
+  margin: 14px 0 2px;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.nubian-calculator-range::-webkit-slider-runnable-track {
+  height: 5px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #c96a3d, #e1d3b9);
+}
+
+.nubian-calculator-range::-moz-range-track {
+  height: 5px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #c96a3d, #e1d3b9);
+}
+
+.nubian-calculator-range::-webkit-slider-thumb {
+  width: 20px;
+  height: 20px;
+  margin-top: -7.5px;
+  appearance: none;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: #c96a3d;
+  box-shadow: 0 0 0 1px #c96a3d;
+}
+
+.nubian-calculator-range::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: #c96a3d;
+  box-shadow: 0 0 0 1px #c96a3d;
+}
+
+.nubian-calculator-range:focus-visible {
+  outline: 2px solid #c96a3d;
+  outline-offset: 4px;
+}
+
+.nubian-range-labels {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  color: #64776d;
+  font-size: 11px;
+}
+
+.nubian-range-labels output {
+  color: #315044;
+  font-size: 13px;
+  font-weight: 800;
+  text-align: center;
+}
+
+.nubian-term-options {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+}
+
+.nubian-term-options button {
+  min-height: 62px;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 3px;
+  padding: 7px 4px;
+  border-radius: 999px;
+  font-size: 11px;
+}
+
+.nubian-term-options button strong {
+  color: inherit;
+  font-size: 11px;
+}
+
+.nubian-term-range-labels output {
+  white-space: nowrap;
+}
+
+.nubian-rate-field > output {
+  min-height: 48px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #d5ddd8;
+  border-radius: 10px;
+  color: #315044;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.nubian-calculator-summary {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: #173d32;
+  color: #fff;
+}
+
+.nubian-summary-label {
+  display: block;
+  margin-bottom: 8px;
+  color: #b6c8bf;
+  font-size: 13px;
+}
+
+.nubian-summary-total {
+  display: block;
+  overflow-wrap: anywhere;
+  color: #fff;
+  font-size: clamp(28px, 3.2vw, 38px);
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.nubian-summary-details {
+  display: grid;
+  gap: 0;
+  margin: 22px 0;
+}
+
+.nubian-summary-details > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 11px 0;
+  border-bottom: 1px solid #ffffff1a;
+  font-size: 13px;
+}
+
+.nubian-summary-details dt {
+  color: #b6c8bf;
+}
+
+.nubian-summary-details dd {
+  margin: 0;
+  color: #fff;
+  font-weight: 700;
+  text-align: right;
+}
+
+.nubian-summary-details > div:nth-child(2) dd {
+  color: #f2ad52;
+}
+
+.nubian-summary-apply {
+  min-height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  margin-top: 9px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  background: #c96a3d;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 800;
+  text-align: center;
+  transition: background 0.15s;
+}
+
+.nubian-summary-apply.secondary {
+  border: 1px solid #d6ddd9;
+  background: #edf0ea;
+  color: #244b3e;
+}
+
+.nubian-summary-apply.secondary:hover {
+  background: #fff;
+}
+
+.nubian-calculator-disclaimer {
+  margin: 16px 0 0;
+  color: #b6c8bf;
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+@media (max-width: 800px) {
+  .nubian-calculator {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+    padding: 28px 22px;
+  }
+
+  .nubian-calculator-heading {
+    grid-column: auto;
+  }
+
+  .nubian-calculator-controls,
+  .nubian-calculator-summary {
+    padding: 23px;
+  }
+}
+
+@media (max-width: 420px) {
+  .nubian-calculator {
+    margin-right: 14px;
+    margin-left: 14px;
+    padding: 24px 14px;
+  }
+
+  .nubian-calculator-controls,
+  .nubian-calculator-summary {
+    padding: 18px 15px;
+  }
+
+  .nubian-amount-presets {
+    gap: 6px;
+  }
+
+  .nubian-amount-presets button {
+    min-width: 48px;
+    padding: 8px 10px;
+  }
+}
