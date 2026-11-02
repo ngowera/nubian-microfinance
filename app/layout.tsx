@@ -8,8 +8,9 @@ import "./loan-application.css";
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
 
 export const metadata: Metadata = {
-  title: "Nubian Entrepreneurship Microfinance | Back your next big move",
-  description: "Loans and appointment-based support for Malawi's entrepreneurs.",
+  title: "Your Microfinance Company | Back your next big move",
+  description:
+    "Practical loan options and appointment-based support for entrepreneurs.",
   other: {
     "codex-preview": "development",
   },
